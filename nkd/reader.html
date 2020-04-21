@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="X-Frame-Bypass: Web Component extending IFrame to bypass X-Frame-Options: deny/sameorigin">
+	<title>X-Frame-Bypass Web Component Demo</title>
+	<style type="text/css">html, body {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+			overflow: hidden;
+		}
+		img {
+			display: block;
+			width: 80%;
+			height: 100%;
+			object-fit: contain;
+		}
+		
+		.but {
+			  display: block;
+			  height: 100%;
+			  width:19.5%;
+			  border: none;
+			  background-color: #4CAF50;
+			  padding: 14px 28px;
+			  font-size: 16px;
+			  cursor: pointer;
+			  text-align: center;
+		}
+		#outer
+		{
+				width:100%;
+				text-align: center;
+		}
+		.inner
+		{
+			display: inline-block;
+		}
+		.btn-group{
+		height : 33%
+		}
+		.btn-group button {
+		  background-color: #4CAF50; /* Green background */
+		  border: 1px solid green; /* Green border */
+		  color: white; /* White text */
+		  padding: 10px 24px; /* Some padding */
+		  cursor: pointer; /* Pointer/hand icon */
+		  height: 100%; /* Set a width if needed */
+		  width: 19.5%;
+		  display: block; /* Make the buttons appear below each other */
+		}
+
+		.btn-group button:not(:last-child) {
+		  border-bottom: none; /* Prevent double borders */
+		}
+
+		/* Add a background color on hover */
+		.btn-group button:hover {
+		  background-color: #3e8e41;
+		}
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script><script>
+
+	var foo = getParameterByName('query');
+	var tot = getParameterByName('total');
+	var image = document.getElementById('img1');
+	var num = parseInt(getParameterByName('page'));
+	
+	
+	     loadpage(num);  
+
+
+	// 'https://i.nhentai.net/galleries/'.concat(foo,'/',num,'.jpg');
+	// document.getElementsByClassName("intro").src = 'https://i.nhentai.net/galleries/'.concat(foo,'/',num,'.jpg');
+
+	function myFunction() {
+	            $.ajax({
+				url: 'load2.php',
+				type:"GET",
+				success: function(result){
+				window.location.href = "index.html";
+			    },
+				error:function(error){
+				}
+				
+			   })
+	 
+	}
+	function next() {
+	if (num < tot){
+		$(document).ready(function() {
+		num = num + 1;
+		loadpage(num);
+   
+	//window.location.href = "reader.html?query="+foo+"&total="+tot+"&page="+num;
+	});
+
+	} else{
+	$(document).ready(function() {
+	num = 1;
+    loadpage(num);   
+	//window.location.href = "reader.html?query="+foo+"&total="+tot+"&page="+num;
+	});
+	}}
+	function back() {
+	if (num > 1){
+		$(document).ready(function() {
+		num = num - 1;
+    loadpage(num);    
+	//window.location.href = "reader.html?query="+foo+"&total="+tot+"&page="+num;
+	});
+	} else{
+	$(document).ready(function() {
+	num = tot;
+    loadpage(num);  
+//	window.location.href = "reader.html?query="+foo+"&total="+tot+"&page="+num;
+	});
+	}
+	}
+	function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+	
+}
+function loadpage(page){
+$.ajax({
+    url: 'images/foo',
+    type:'HEAD',
+    error: function()
+    {
+        $.ajax({
+				url: 'load.php?id='+foo+'&page='+page,
+				type:"GET",
+				success: function(result){
+				document.getElementById('img1').src = 'images/'+page+'-'+foo+'.jpg';  
+			    },
+				error:function(error){
+				}
+				
+			   })
+    },
+    success: function()
+    {$.ajax({
+    url: 'images/'+page+'.jpg',
+    type:'HEAD',
+    error: function()
+    {
+        $.ajax({
+				url: 'load.php?id='+foo+'&page='+page,
+				type:"GET",
+				success: function(result){
+				document.getElementById('img1').src = 'images/'+page+'-'+foo+'.jpg';  
+			    },
+				error:function(error){
+				}
+				
+			   })
+    },
+    success: function()
+    {
+        //file exists
+		        document.getElementById('img1').src = 'images/'+page+'-'+foo+'.jpg';  
+    }
+})
+      
+    }
+});
+
+	return false;
+}
+	</script>
+</head>
+<body>
+<p><img align="right" class="intro" id="img1" src="" /></p>
+
+<div class="btn-group"><button onclick="myFunction()">Back</button><button onclick="next()">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</button><button onclick="back()">&lt;&lt;&lt;&lt;&lt;&lt;</button></div>
+</body>
+</html>

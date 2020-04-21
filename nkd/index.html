@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+var search = "harem";
+var page = 1;
+var part = 1;
+var totalpage;
+var staticUrl = 'https://cors-anywhere.herokuapp.com/https://nhentai.net/api/galleries/search?query=harem&page=1&per_page=10&sort=popular';
+var jsonObj2;
+var jsonObj;
+var count;
+$.ajax({
+	url: staticUrl,
+	type:"GET",
+	success: function(result){
+	console.log(result)
+	jsonObj = result
+	 count = jsonObj.result.length;
+	totalpage = jsonObj.num_pages;
+	//alert(count);
+	var container= document.getElementById('buttons');
+	if( count > 13 ){
+	realcnt = 13;
+	}
+	for(var i=0;i<realcnt;i++){
+    //console.log(jsonObj.myObject[i]);
+    var obj= jsonObj.result[i];
+	var val = JSON.stringify(obj.id).concat(' ', obj.title.english)
+
+	console.log(val)
+
+    var button = "<button type='button' id="+obj.media_id+" value="+obj.media_id+" title="+obj.num_pages+" onclick=myfunc(this.value,this.title)   ></button>"
+	
+    container.innerHTML
+    +=button;
+	document.getElementById(obj.media_id).innerHTML = val;
+	
+	}},
+	error:function(error){
+	console.log('Error ${error}')
+	}
+	
+	})
+
+function myfunc(x,y) {
+ //   window.location.href = "http://nhentai.net/g/"+x;
+      window.location.href = "reader.html?query="+x+"&total="+y+"&page=1";
+    }
+
+function send(mode){
+ var query;
+
+if(mode == 1){
+    query = encodeURI(document.getElementById('myText').value);
+	search = query;
+    staticUrl = 'https://cors-anywhere.herokuapp.com/https://nhentai.net/api/galleries/search?query='.concat(search,'&page=1&per_page=10&sort=popular'); }
+else if (mode == 2){
+	 if( count > 13 && part == 2 && page < totalpage ){
+	 console.log("case 1")
+	 part = 1;
+	 page = page + 1;
+	 staticUrl = 'https://cors-anywhere.herokuapp.com/https://nhentai.net/api/galleries/search?query='.concat(search,'&page=',page,'&per_page=10&sort=popular');
+	 }
+else if( count <= 13 && part == 1 && page < totalpage ){
+     console.log("case 2")
+	 part = 1;
+	 page = page + 1;
+	 staticUrl = 'https://cors-anywhere.herokuapp.com/https://nhentai.net/api/galleries/search?query='.concat(search,'&page=',page,'&per_page=10&sort=popular');
+}
+else if( count > 13 && part == 1 && page < totalpage ){
+	 console.log("case 3")
+	 part = 2;
+	 staticUrl = 'https://cors-anywhere.herokuapp.com/https://nhentai.net/api/galleries/search?query='.concat(search,'&page=',page,'&per_page=10&sort=popular');
+}
+else if( count <= 13 && part == 1 && page == totalpage ){
+	console.log("case 4")
+     part = 1;
+	 page = 1;
+	 staticUrl = 'https://cors-anywhere.herokuapp.com/https://nhentai.net/api/galleries/search?query='.concat(search,'&page=',page,'&per_page=10&sort=popular');
+}
+else if( count > 13 && part == 2 && page == totalpage ){
+   console.log("case 5")
+     part = 1;
+	 page = 1;
+	 staticUrl = 'https://cors-anywhere.herokuapp.com/https://nhentai.net/api/galleries/search?query='.concat(search,'&page=',page,'&per_page=10&sort=popular');
+} else{
+   console.log("case 6")
+    part = 2;
+	 staticUrl = 'https://cors-anywhere.herokuapp.com/https://nhentai.net/api/galleries/search?query='.concat(search,'&page=',page,'&per_page=10&sort=popular');
+}
+	
+}	else{
+if( count > 13 && part == 2 && page > 0){
+	 console.log("case 1")
+	 part = 1;
+	 page = page ;
+	 staticUrl = 'https://cors-anywhere.herokuapp.com/https://nhentai.net/api/galleries/search?query='.concat(search,'&page=',page,'&per_page=10&sort=popular');
+	 }
+else if( count <= 13 && part == 1 && page == 1 ){
+     console.log("case 2")
+	 part = 2;
+	 page = totalpage;
+	 staticUrl = 'https://cors-anywhere.herokuapp.com/https://nhentai.net/api/galleries/search?query='.concat(search,'&page=',page,'&per_page=10&sort=popular');
+}
+else if( count > 13 && part == 1 && page > 1 ){
+	 console.log("case 3")
+	 part = 2;
+	 page = page - 1 ;
+	 staticUrl = 'https://cors-anywhere.herokuapp.com/https://nhentai.net/api/galleries/search?query='.concat(search,'&page=',page,'&per_page=10&sort=popular');
+}
+else if( count <= 13 && part == 1 && page > 1 ){
+	console.log("case 4")
+     part = 2;
+	 page = page - 1;
+	 staticUrl = 'https://cors-anywhere.herokuapp.com/https://nhentai.net/api/galleries/search?query='.concat(search,'&page=',page,'&per_page=10&sort=popular');
+}
+else if( count > 13 && part == 2 && page == 1 ){
+   console.log("case 5")
+     part = 1;
+	 page = 1;
+	 staticUrl = 'https://cors-anywhere.herokuapp.com/https://nhentai.net/api/galleries/search?query='.concat(search,'&page=',page,'&per_page=10&sort=popular');
+} else if( count > 13 && part == 1 && page == 1 ){
+   console.log("case 6")
+     part = 2;
+	 page = totalpage;
+	 staticUrl = 'https://cors-anywhere.herokuapp.com/https://nhentai.net/api/galleries/search?query='.concat(search,'&page=',page,'&per_page=10&sort=popular');
+
+}
+}
+	
+   var jsonObj2;
+   var jsonObj;
+   var containerx= document.getElementById('buttons');
+   containerx.innerHTML = '';
+$.ajax({	
+	url: staticUrl,
+	type:"GET",
+	success: function(result){
+	console.log(result)
+	jsonObj = result
+	count = jsonObj.result.length;
+	var realcnt ;
+	//alert(count);
+	var container= document.getElementById('buttons');
+	if( part == 1){
+	if( count > 13 ){
+	realcnt = 13;
+	}
+	for(var i=0;i<realcnt;i++){
+    //console.log(jsonObj.myObject[i]);
+    var obj= jsonObj.result[i];
+	var val = JSON.stringify(obj.id).concat(' ', obj.title.english)
+	console.log(val)
+
+    var button = "<button type='button' id="+obj.media_id+" value="+obj.media_id+" title="+obj.num_pages+" onclick=myfunc(this.value,this.title)   ></button>"
+	
+    container.innerHTML
+    +=button;
+	document.getElementById(obj.media_id).innerHTML = val;
+	
+	
+	}} else{
+	var a;
+	var b;
+	if(count < 13){
+	a = 0;
+	} else{
+	a = 13;
+	}
+	
+	for(var i=a;i<count;i++){
+    //console.log(jsonObj.myObject[i]);
+    var obj= jsonObj.result[i];
+	var val = JSON.stringify(obj.id).concat(' ', obj.title.english)
+	console.log(val)
+
+    var button = "<button type='button' id="+obj.media_id+" value="+obj.media_id+" title="+obj.num_pages+" onclick=myfunc(this.value,this.title)   ></button>"
+	
+    container.innerHTML
+    +=button;
+	document.getElementById(obj.media_id).innerHTML = val;
+	
+	
+	}
+	}
+	
+	
+	
+	
+	},
+	error:function(error){
+	console.log('Error ${error}')
+	}
+	
+	})
+}
+
+</script>
+<style>
+button[type=button] {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  width:100%;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+#myText{
+  width:100%;
+  font-size: 20px;
+}
+.footer{
+background-color: #4CAF50;
+  border: none;
+  color: white;
+  width: 49.3%;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<p>
+          <input type = "text"
+                 id = "myText"
+                 value = "harem" />
+		 
+		 <button type = 'button' id='summit' onclick=send(1)  > Search </button>
+</p>
+<div id='buttons'></div>
+<p>
+<div class='container'>
+    <button class="footer" id="btn1" onclick=send(3) >prev</button>
+    <button class="footer" id="btn3" onclick=send(2) >next</button>
+</div>
+</p>
+</body>
+</html>
