@@ -11,9 +11,9 @@ parse_str($url_components['query'], $params);
 
 $client = new GuzzleHttp\Client();
 try {
-$res = $client->request('GET', 'http://cdn.nhent.ai/galleries/'.$params['id'].'/'.$params['page'].'.jpg');
+$res = $client->request('GET', 'http://i.nhentai.net/galleries/'.$params['id'].'/'.$params['page'].'.jpg');
 }catch(Exception $e){
-$res = $client->request('GET', 'http://cdn.nhent.ai/galleries/'.$params['id'].'/'.$params['page'].'.png');	
+$res = $client->request('GET', 'http://i.nhentai.net/galleries/'.$params['id'].'/'.$params['page'].'.png');	
 }
 echo $res->getStatusCode();
 // "200"
